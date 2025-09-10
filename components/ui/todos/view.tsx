@@ -19,26 +19,7 @@ export default function TodosView() {
     deleteTodo,
     completedCount,
     totalCount,
-  } = useTodos([
-    {
-      id: 1,
-      text: "Terminer le rapport mensuel",
-      completed: false,
-      priority: "high",
-    },
-    {
-      id: 2,
-      text: "Préparer la présentation client",
-      completed: false,
-      priority: "medium",
-    },
-    {
-      id: 3,
-      text: "Réviser les notes de cours",
-      completed: true,
-      priority: "low",
-    },
-  ]);
+  } = useTodos();
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -187,7 +168,7 @@ export default function TodosView() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => deleteTodo(todo.id)}
+                      onClick={() => deleteTodo(`${todo.id}`)}
                       className="text-destructive hover:text-destructive hover:bg-destructive/10"
                     >
                       <Trash2 className="h-4 w-4" />

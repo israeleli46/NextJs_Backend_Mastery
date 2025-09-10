@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { addTodo } from "@/core/api/add-todo";
+import { deleteTodo } from "@/core/api/delete-todo";
+import { useEffect, useState } from "react";
 
 export interface Todo {
   id: number;
@@ -12,12 +14,22 @@ export function useTodos(initialTodos: Todo[] = []) {
   const [newTodo, setNewTodo] = useState("");
   const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
 
-  const addTodo = () => {
+  const getTodos = async () => {
+    const response = await fetch("/api/todos");
+    if (response.ok) {
+      const data = await response.json();
+      setTodos(data);
+    }
+  };
+
+  useEffect(() => {
+    getTodos();
+  }, []);
+
+  const addNewTodo = () => {
     if (newTodo.trim()) {
-      setTodos([
-        ...todos,
-        { id: Date.now(), text: newTodo.trim(), completed: false, priority },
-      ]);
+      addTodo({ text: "", priority: "Medium" }).then(() => getTodos());
+
       setNewTodo("");
     }
   };
@@ -30,8 +42,8 @@ export function useTodos(initialTodos: Todo[] = []) {
     );
   };
 
-  const deleteTodo = (id: number) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  const deleteOneTodo = (id: string) => {
+    deleteTodo("1").then(() => getTodos());
   };
 
   const completedCount = todos.filter((t) => t.completed).length;
@@ -43,9 +55,9 @@ export function useTodos(initialTodos: Todo[] = []) {
     setNewTodo,
     priority,
     setPriority,
-    addTodo,
+    addTodo: addNewTodo,
     toggleTodo,
-    deleteTodo,
+    deleteTodo: deleteOneTodo,
     completedCount,
     totalCount,
   };

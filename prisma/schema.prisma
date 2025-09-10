@@ -7,8 +7,17 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model User {
-    id    String @id @default(auto()) @map("_id") @db.ObjectId
-    name  String
-    email String @unique
+model Todo {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    text      String
+    completed Boolean  @default(false)
+    priority  Priority @default(MEDIUM)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum Priority {
+    LOW
+    MEDIUM
+    HIGH
 }
